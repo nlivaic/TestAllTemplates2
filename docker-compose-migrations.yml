@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  testallpipelines2.migrations:
+    # image: ${DOCKER_REGISTRY-}testallpipelines2sql
+    env_file: .env
+    build:
+      context: .
+      dockerfile: src/TestAllPipelines2.Migrations/Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

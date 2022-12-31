@@ -1,0 +1,1 @@
+./src/wait-for-it.sh testallpipelines2.sql:5432 --timeout=0 --strict -- sleep 5s && dotnet ./TestAllPipelines2.Migrations.dll

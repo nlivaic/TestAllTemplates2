@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TestAllPipelines2.Migrations": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

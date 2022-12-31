@@ -1,0 +1,54 @@
+trigger: none
+pr: none
+
+# Pipeline resource defined as per https://bit.ly/3PhwhRk
+resources:
+  pipelines:
+  - pipeline: build_pipeline        # Used to reference the pipeline reference from other parts of the code.
+    source: testallpipelines2_build_pipeline  	# This must match  the build pipeline name in ADO.
+                                    # By default, pipelines are named after the ADO build pipeline name.
+    trigger:
+      branches:
+      - master                      # Will get triggered whenever the source pipeline runs on master branch.
+
+jobs:
+- deployment: testallpipelines2_deploy_to_appservice
+  displayName: TestAllPipelines2 Deploy to AppService
+  environment: production
+  pool:
+    vmImage: 'ubuntu-latest'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - task: PowerShell@2
+          displayName: 'Create version number'
+          name: 'CreateVersionNumber'
+          inputs:
+            targetType: 'inline'
+            script: |
+              $newVersion = "$(resources.pipeline.build_pipeline.runName)"
+              [string] $buildName = "$($newVersion)"
+              Write-Host "##vso[build.updatebuildnumber]$buildName"
+
+        - download: none
+
+        - task: DownloadPipelineArtifact@2
+          displayName: 'Download Artifact TestAllPipelines2.Api'
+          inputs:
+            buildType: 'specific'
+            definition: testallpipelines2_build_pipeline
+            buildVersionToDownload: 'latest'
+            artifactName: 'drop.TestAllPipelines2.Api'
+            project: 'TestAllPipelines2_ADO_Project'
+            downloadPath: '$(Pipeline.Workspace)/drop/TestAllPipelines2.Api'
+
+        - task: DownloadPipelineArtifact@2
+          displayName: 'Download Artifact TestAllPipelines2.WorkerServices'
+          inputs:
+            buildType: 'specific'
+            definition: testallpipelines2_build_pipeline
+            buildVersionToDownload: 'latest'
+            artifactName: 'drop.TestAllPipelines2.WorkerServices'
+            project: 'DeleteMeAfterYouSetupThosePipelines'
+            downloadPath: '$(Pipeline.Workspace)/drop/TestAllPipelines2.WorkerServices'
