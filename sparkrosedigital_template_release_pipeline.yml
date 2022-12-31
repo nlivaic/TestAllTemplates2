@@ -40,7 +40,7 @@ jobs:
             definition: testallpipelines2_build_pipeline
             buildVersionToDownload: 'latest'
             artifactName: 'drop.TestAllPipelines2.Api'
-            project: 'TestAllPipelines2_ADO_Project'
+            project: 'DeleteMeAfterYouSetupThosePipelines'
             downloadPath: '$(Pipeline.Workspace)/drop/TestAllPipelines2.Api'
 
         - task: DownloadPipelineArtifact@2
